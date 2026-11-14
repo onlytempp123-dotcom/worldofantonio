@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldOfAntonio — Global IRC & Community Network</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%99%3C/text%3E%3C/svg%3E">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Plus Jakarta Sans, Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: '#050608',
+                        charcoal: '#0A0C10',
+                        surface: '#11141B',
+                        accentCyan: '#E2E8F0',
+                        accentIndigo: '#CBD5E1',
+                        accentViolet: '#94A3B8',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 42s linear infinite',
+                        'spin-reverse-slow': 'spin-reverse 32s linear infinite',
+                        'pulse-glow': 'pulseGlow 5s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'spin-reverse': {
+                            from: { transform: 'rotate(360deg)' },
+                            to: { transform: 'rotate(0deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.45', transform: 'scale(1)' },
+                            '50%': { opacity: '0.8', transform: 'scale(1.04)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom subtle scrollbars & background textures */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(5, 6, 8, 0.85); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
+
+        /* Ultra-Sheer Moonlit Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(10, 12, 16, 0.28);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .glass-card {
+            background: rgba(10, 12, 16, 0.28);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            background: rgba(14, 17, 23, 0.42);
+            border-color: rgba(255, 255, 255, 0.28);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.65), 0 0 25px -5px rgba(226, 232, 240, 0.14);
+        }
+
+        /* Moonlit Silver & Ice-White Chat Now Button */
+        .btn-chat-glow {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(203, 213, 225, 0.92) 50%, rgba(148, 163, 184, 0.95) 100%);
+            color: #050608;
+            box-shadow: 0 0 35px -5px rgba(226, 232, 240, 0.42), 0 10px 25px -8px rgba(0, 0, 0, 0.65);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-chat-glow:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 55%, #CBD5E1 100%);
+            box-shadow: 0 0 48px 0px rgba(248, 250, 252, 0.6), 0 14px 30px -6px rgba(0, 0, 0, 0.75);
+        }
+        .btn-chat-glow:active { transform: translateY(0) scale(0.99); }
+
+        /* Welcome card fields */
+        .wf-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 0.85rem;
+            padding: 0.7rem 0.95rem;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color .2s, background .2s;
+        }
+        .wf-input::placeholder { color: #94a3b8; }
+        .wf-input:focus { border-color: rgba(255, 255, 255, 0.45); background: rgba(255, 255, 255, 0.1); }
+        .wf-check { accent-color: #e2e8f0; width: 1rem; height: 1rem; }
+        .ic-heart { display: inline-block; color: #fb7185; animation: icBeat 2.8s ease-in-out infinite; }
+        @keyframes icBeat { 0%,100% { transform: scale(1); } 12% { transform: scale(1.22); } 24% { transform: scale(1); } 36% { transform: scale(1.12); } 48% { transform: scale(1); } }
+        @media (prefers-reduced-motion: reduce) { .ic-heart { animation: none; } }
+    </style>
+</head>
+<body class="bg-transparent text-slate-100 font-sans antialiased selection:bg-white/25 selection:text-white overflow-x-hidden relative">
+
+    <!-- Full-Bleed Moonlit Mountain & River Valley Backdrop -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050608]">
+        <img
+            src="assets/bg.jpg"
+            alt="Moonlit mountain peaks and winding river valley under a full moon"
+            class="w-full h-full object-cover object-center opacity-95 scale-[1.01]"
+            onerror="this.style.display='none'; document.getElementById('moonlit-fallback-svg').classList.remove('hidden');"
+        />
+        <!-- Vector fallback, only shown if the picture cannot load -->
+        <svg id="moonlit-fallback-svg" class="hidden w-full h-full object-cover" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="skyGlow" cx="38%" cy="24%" r="65%">
+                    <stop offset="0%" stop-color="#3F424A"/>
+                    <stop offset="28%" stop-color="#1E2026"/>
+                    <stop offset="68%" stop-color="#0B0C0F"/>
+                    <stop offset="100%" stop-color="#040507"/>
+                </radialGradient>
+                <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#FFFDF5" stop-opacity="0.9"/>
+                    <stop offset="35%" stop-color="#E5E2D9" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="#E5E2D9" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="riverSheen" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#8C9099" stop-opacity="0.65"/>
+                    <stop offset="45%" stop-color="#B8BBC2" stop-opacity="0.55"/>
+                    <stop offset="100%" stop-color="#1C1E24" stop-opacity="0.85"/>
+                </linearGradient>
+            </defs>
+            <rect width="1600" height="900" fill="url(#skyGlow)"/>
+            <circle cx="620" cy="225" r="220" fill="url(#moonHalo)"/>
+            <circle cx="620" cy="225" r="64" fill="#F2EFE6"/>
+            <circle cx="603" cy="210" r="14" fill="#DCD8CC" opacity="0.55"/>
+            <circle cx="638" cy="236" r="18" fill="#D5D1C5" opacity="0.45"/>
+            <polygon points="0,520 180,310 340,440 510,290 660,420 840,260 1030,410 1230,270 1440,390 1600,250 1600,900 0,900" fill="#14161B"/>
+            <polygon points="0,560 220,370 430,490 630,360 860,470 1120,330 1380,450 1600,320 1600,900 0,900" fill="#0D0E12"/>
+            <path d="M580,455 C620,480 510,515 470,550 C420,595 620,625 560,695 C500,765 380,820 420,900 L890,900 C820,810 730,750 760,680 C790,610 640,585 670,540 C695,500 635,475 615,455 Z" fill="url(#riverSheen)"/>
+            <polygon points="0,330 150,430 290,540 430,660 410,900 0,900" fill="#060709"/>
+            <polygon points="1600,290 1410,410 1210,520 960,640 880,900 1600,900" fill="#050608"/>
+        </svg>
+        <!-- Subtle Edge Vignette for Text Legibility -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-black/60"></div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 1. STICKY GLASSMORPHIC NAVIGATION HEADER                              -->
+    <!-- ===================================================================== -->
+    <header id="navbar" class="fixed top-0 inset-x-0 z-40 transition-all duration-300 border-b border-white/[0.12] bg-[#0A0C10]/30 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+
+                <!-- Left: Globe Logo + Brand Name -->
+                <a href="#home" class="group flex items-center gap-3 focus:outline-none">
+                    <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-white/[0.07] border border-white/15 group-hover:border-white/40 transition-all duration-300 shadow-inner">
+                        <svg class="w-6 h-6 text-slate-200 group-hover:text-white transition-colors duration-300 group-hover:rotate-12 transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <ellipse cx="12" cy="12" rx="4.2" ry="10"></ellipse>
+                            <path d="M2.5 9h19"></path>
+                            <path d="M2.5 15h19"></path>
+                        </svg>
+                        <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-slate-200 ring-2 ring-black/60"></span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-white group-hover:text-slate-200 transition-colors">
+                            World<span class="text-slate-300">Of</span>Antonio
+                        </span>
+                        <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 hidden sm:block">Web IRC Client</span>
+                    </div>
+                </a>
+
+                <!-- Right: Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center gap-1 sm:gap-2">
+                    <a href="#home" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/[0.08] transition-all">Home</a>
+                    <a href="#rules" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/[0.08] transition-all">Rules</a>
+                    <a href="#feedback" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/[0.08] transition-all">Feedback</a>
+                    <a href="#contact" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/[0.08] transition-all">Contact</a>
+                </nav>
+
+                <!-- Mobile Hamburger Toggle -->
+                <button id="mobile-menu-btn" aria-label="Toggle Menu" class="md:hidden p-2.5 rounded-xl bg-white/[0.07] border border-white/15 text-slate-200 hover:text-white hover:bg-white/15 transition-colors">
+                    <svg id="menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-white/[0.12] bg-[#0A0C10]/75 backdrop-blur-xl px-4 pt-3 pb-5 space-y-1.5">
+            <a href="#home" class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium text-slate-100 hover:bg-white/[0.08] hover:text-white transition-colors">Home</a>
+            <a href="#rules" class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium text-slate-100 hover:bg-white/[0.08] hover:text-white transition-colors">Rules</a>
+            <a href="#feedback" class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium text-slate-100 hover:bg-white/[0.08] hover:text-white transition-colors">Feedback</a>
+            <a href="#contact" class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium text-slate-100 hover:bg-white/[0.08] hover:text-white transition-colors">Contact</a>
+            <div class="pt-2">
+                <button onclick="openIrcModal('general')" class="w-full py-3 rounded-xl font-display font-semibold text-sm btn-chat-glow flex items-center justify-center gap-2">
+                    <span>Launch IRC Client</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- 2. HERO / HOME SECTION                                                -->
+    <!-- ===================================================================== -->
+    <main class="relative z-10 bg-transparent">
+        <section id="home" class="relative min-h-screen flex items-center justify-center pt-24 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-transparent">
+
+            <!-- Subtle Orbiting Wireframe Globe Backdrop -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-25">
+                <div class="relative w-[340px] h-[340px] sm:w-[540px] sm:h-[540px] lg:w-[660px] lg:h-[660px]">
+                    <svg class="w-full h-full animate-spin-slow text-slate-200/25" viewBox="0 0 400 400" fill="none">
+                        <circle cx="200" cy="200" r="190" stroke="currentColor" stroke-width="1" stroke-dasharray="4 8" />
+                        <circle cx="200" cy="200" r="150" stroke="currentColor" stroke-width="0.75" />
+                        <ellipse cx="200" cy="200" rx="150" ry="58" stroke="currentColor" stroke-width="0.75" />
+                        <ellipse cx="200" cy="200" rx="58" ry="150" stroke="currentColor" stroke-width="0.75" />
+                    </svg>
+                    <svg class="absolute inset-0 w-full h-full animate-spin-reverse-slow text-slate-300/20" viewBox="0 0 400 400" fill="none">
+                        <ellipse cx="200" cy="200" rx="115" ry="150" transform="rotate(35 200 200)" stroke="currentColor" stroke-width="0.75" stroke-dasharray="3 6" />
+                        <ellipse cx="200" cy="200" rx="115" ry="150" transform="rotate(-35 200 200)" stroke="currentColor" stroke-width="0.75" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Hero Centerpiece Content -->
+            <div class="relative max-w-4xl mx-auto text-center flex flex-col items-center">
+
+                <h1 class="font-display font-extrabold text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white leading-[1.08] mb-6 drop-shadow-[0_6px_28px_rgba(0,0,0,0.85)]">
+                    Welcome to <br class="sm:hidden" />
+                    <span class="bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                        WorldOfAntonio
+                    </span>
+                </h1>
+
+                <p class="max-w-2xl text-base sm:text-lg lg:text-xl text-slate-100/95 leading-relaxed font-normal mb-10 drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)]">
+                    An exclusive, vibrant global community powered by a sleek browser-based <span class="text-white font-semibold">IRC client</span> built for meaningful conversations, late-night tech &amp; culture talks, worldwide friendships, and pure chill vibes—zero noise, zero algorithms.
+                </p>
+
+                <!-- Prominent Centerpiece 'Chat Now' CTA Button -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+                    <button onclick="openIrcModal('general')" class="group relative inline-flex items-center justify-center gap-3 px-9 py-4 sm:px-11 sm:py-5 rounded-2xl font-display font-bold text-base sm:text-lg btn-chat-glow cursor-pointer w-full sm:w-auto">
+                        <svg class="w-6 h-6 text-slate-950 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>Chat Now</span>
+                        <svg class="w-5 h-5 text-slate-900 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </button>
+
+                    <a href="#rules" class="inline-flex items-center justify-center gap-2 px-7 py-4 sm:py-5 rounded-2xl font-display font-semibold text-sm sm:text-base text-slate-100 hover:text-white glass-panel hover:bg-white/[0.12] transition-all w-full sm:w-auto">
+                        <span>Read Community Rules</span>
+                    </a>
+                </div>
+
+                <!-- Subtle Feature Highlights Strip -->
+                <div class="mt-14 pt-8 border-t border-white/[0.14] grid grid-cols-3 gap-4 sm:gap-10 max-w-xl w-full text-center">
+                    <div>
+                        <div class="font-display font-bold text-lg sm:text-xl text-white drop-shadow">24/7 Live</div>
+                        <div class="text-xs text-slate-300 mt-0.5">Instant Web IRC Client</div>
+                    </div>
+                    <div>
+                        <div class="font-display font-bold text-lg sm:text-xl text-slate-200 drop-shadow">Encrypted</div>
+                        <div class="text-xs text-slate-300 mt-0.5">Private Real-Time Chat</div>
+                    </div>
+                    <div>
+                        <div class="font-display font-bold text-lg sm:text-xl text-slate-200 drop-shadow">Zero Ads</div>
+                        <div class="text-xs text-slate-300 mt-0.5">100% Community Driven</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- 3. COMMUNITY RULES SECTION                                            -->
+        <!-- ===================================================================== -->
+        <section id="rules" class="relative py-24 px-4 sm:px-6 lg:px-8 border-t border-white/[0.1] bg-transparent">
+            <div class="max-w-6xl mx-auto">
+
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="inline-block font-mono text-xs uppercase tracking-[0.22em] text-slate-300 mb-3">Code of Conduct</span>
+                    <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight mb-4 drop-shadow-[0_4px_20px_rgba(0,0,0,0.85)]">
+                        Community Rules
+                    </h2>
+                    <p class="text-slate-200/90 text-sm sm:text-base leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                        To keep <span class="text-white font-semibold">WorldOfAntonio</span> welcoming, safe, and enjoyable for everyone across the globe, all members agree to follow these core principles.
+                    </p>
+                </div>
+
+                <!-- 8 Glassmorphic Rule Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+                    <div class="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-slate-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                </svg>
+                            </div>
+                            <span class="font-mono text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">01</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">Don't Abuse</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Zero tolerance for personal attacks, harassment, hate speech, slurs, or toxic hostility toward any member.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-slate-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                            </div>
+                            <span class="font-mono text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">02</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">Follow Admins</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Respect channel operators (<span class="font-mono text-xs text-white">@ops</span>) and network admins. Their moderation decisions keep the network stable and fair.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-slate-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <span class="font-mono text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">03</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">Don't Spam</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Keep the chat readable. No message flooding, excessive CAPS, ASCII walls, automated bots, or unsolicited self-promotion.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-slate-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <span class="font-mono text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">04</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">No Negative Groupism</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            No toxic cliques, gatekeeping, brigading, or ganging up on newcomers. Everyone belongs in the conversation equally.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-slate-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </div>
+                            <span class="font-mono text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">05</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">Respect Everyone</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Treat fellow members from every corner of the world with kindness, empathy, and basic human dignity—even when debating.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-slate-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <span class="font-mono text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">06</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">Keep It Chill &amp; Constructive</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Bring good energy, respect channel topics, and help cultivate an inspiring space where people love hanging out.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-slate-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <span class="font-mono text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">07</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">Adults Only (18+)</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            This is a mature community. Participation in <span class="text-white font-medium">WorldOfAntonio</span> and our Web IRC Client is strictly restricted to individuals aged 18 and older.
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center text-slate-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                                </svg>
+                            </div>
+                            <span class="font-mono text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">08</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">Authorized Bots Only</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Automated scripts and custom bots require prior approval. Please contact the admin team before connecting any bot to the chat.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- 4. FEEDBACK & 5. CONTACT SECTIONS                                     -->
+        <!-- ===================================================================== -->
+        <section class="relative py-24 px-4 sm:px-6 lg:px-8 border-t border-white/[0.1] bg-transparent">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                <!-- 4. FEEDBACK CARD -->
+                <div id="feedback" class="glass-panel rounded-3xl p-8 sm:p-10 relative overflow-hidden flex flex-col justify-between group hover:border-white/25 transition-all duration-300">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white/[0.08] border border-white/15 text-slate-200 font-mono text-xs mb-6">
+                            <span>Community Feedback</span>
+                        </div>
+                        <h2 class="font-display font-bold text-2xl sm:text-3xl text-white tracking-tight mb-4">
+                            Shape the Future of WorldOfAntonio
+                        </h2>
+                        <p class="text-slate-200 text-base sm:text-lg leading-relaxed mb-8">
+                            Have an idea, feature request, or suggestion to make our community even better?
+                            <span class="text-white font-medium">
+                                Give feedback in our IRC channel
+                                <button onclick="openIrcModal('feedback')" class="text-white hover:text-slate-200 underline decoration-white/60 underline-offset-4 font-semibold cursor-pointer transition-colors">
+                                    here
+                                </button>.
+                            </span>
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-white/[0.12] flex flex-wrap items-center justify-between gap-4">
+                        <div class="text-xs font-mono text-slate-300">
+                            Web IRC Client &bull; Open 24/7
+                        </div>
+                        <button onclick="openIrcModal('feedback')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-display font-semibold bg-white/[0.12] hover:bg-white/[0.2] text-white border border-white/20 transition-all cursor-pointer">
+                            <span>Open IRC Client</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. CONTACT CARD -->
+                <div id="contact" class="glass-panel rounded-3xl p-8 sm:p-10 relative overflow-hidden flex flex-col justify-between group hover:border-white/25 transition-all duration-300">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white/[0.08] border border-white/15 text-slate-200 font-mono text-xs mb-6">
+                            <span>Direct Support</span>
+                        </div>
+                        <h2 class="font-display font-bold text-2xl sm:text-3xl text-white tracking-tight mb-4">
+                            Need Help or Want to Reach Us?
+                        </h2>
+                        <p class="text-slate-200 text-base sm:text-lg leading-relaxed mb-8">
+                            Whether you need operator assistance, appeal support, or want to connect with the admin team directly—
+                            <span class="text-white font-medium">
+                                contact us at the IRC channel
+                                <button onclick="openIrcModal('contact')" class="text-white hover:text-slate-200 underline decoration-white/60 underline-offset-4 font-semibold cursor-pointer transition-colors">
+                                    here
+                                </button>.
+                            </span>
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-white/[0.12] flex flex-wrap items-center justify-between gap-4">
+                        <div class="text-xs font-mono text-slate-300">
+                            Admin Team &bull; Instant Response
+                        </div>
+                        <button onclick="openIrcModal('contact')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-display font-semibold bg-white/[0.12] hover:bg-white/[0.2] text-white border border-white/20 transition-all cursor-pointer">
+                            <span>Open IRC Client</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- FOOTER                                                                -->
+    <!-- ===================================================================== -->
+    <footer class="relative z-10 border-t border-white/[0.12] bg-[#0A0C10]/35 backdrop-blur-md py-10 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5">
+                <svg class="w-5 h-5 text-slate-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <ellipse cx="12" cy="12" rx="4.2" ry="10"></ellipse>
+                    <path d="M2.5 9h19M2.5 15h19"></path>
+                </svg>
+                <span class="font-display font-bold text-sm text-white">WorldOfAntonio</span>
+                <span class="text-slate-500">&bull;</span>
+                <span class="text-xs text-slate-300">Global IRC Community</span>
+            </div>
+
+            <div class="flex items-center gap-6 text-xs text-slate-300">
+                <a href="#home" class="hover:text-white transition-colors">Home</a>
+                <a href="#rules" class="hover:text-white transition-colors">Rules</a>
+                <a href="#feedback" class="hover:text-white transition-colors">Feedback</a>
+                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+            </div>
+
+            <p class="text-xs text-slate-300 font-mono">
+                &copy; <span id="year"></span> WorldOfAntonio. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- 6. WELCOME CARD  ->  opens the real IRC client (kiwi/) as its own page -->
+    <!-- ===================================================================== -->
+    <div id="irc-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-md">
+        <div class="relative w-full max-w-md max-h-[94vh] overflow-y-auto rounded-3xl bg-[#0A0C10]/85 backdrop-blur-2xl border border-white/20 shadow-2xl">
+
+            <button type="button" onclick="closeIrcModal()" aria-label="Close" title="Close" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="px-6 sm:px-8 pt-9 pb-7">
+                <div class="text-center mb-6">
+                    <span id="modal-kicker" class="inline-block font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300 mb-2">Web IRC Client</span>
+                    <h2 id="modal-title" class="font-display font-bold text-3xl text-white tracking-tight">Welcome!</h2>
+                    <p id="modal-sub" class="mt-2 text-sm text-slate-300">Pick a nickname and jump into the conversation.</p>
+                </div>
+
+                <form id="irc-form" novalidate class="space-y-3.5">
+                    <input id="irc-nick" class="wf-input" type="text" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Your nickname" />
+
+                    <label class="flex items-center gap-2.5 text-sm text-slate-200 cursor-pointer select-none">
+                        <input id="irc-haspw" type="checkbox" class="wf-check" /> I have a password
+                    </label>
+                    <input id="irc-pw" class="wf-input hidden" type="password" autocomplete="current-password" placeholder="Password" />
+
+                    <label class="flex items-center gap-2.5 text-sm text-slate-200 cursor-pointer select-none">
+                        <input id="irc-hasid" type="checkbox" class="wf-check" /> Custom Ident
+                    </label>
+                    <input id="irc-ident" class="wf-input hidden" type="text" maxlength="20" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ident (username)" />
+
+                    <input id="irc-chans" class="wf-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="#channel" />
+
+                    <p id="irc-err" class="hidden text-center text-xs text-rose-300"></p>
+
+                    <button type="submit" class="btn-chat-glow w-full py-3.5 rounded-xl font-display font-bold text-base cursor-pointer">Start</button>
+                </form>
+
+                <!-- signature -->
+                <div class="mt-6 text-center select-none">
+                    <div class="mx-auto mb-3 h-px w-3/5 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                    <div class="font-mono text-[10px] uppercase tracking-[0.26em] text-slate-400">Designed by <b class="font-bold text-slate-100">Antonio</b></div>
+                    <div class="mt-1 text-[10px] italic tracking-wider text-slate-400">Lot of Love for Juggu <span class="ic-heart">&#9829;</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Your settings (site address for the real name, channel for each button) -->
+    <script src="site.config.js"></script>
+
+    <script>
+        // Footer year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile Navigation Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconOpen = document.getElementById('menu-icon-open');
+        const iconClose = document.getElementById('menu-icon-close');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden', !isHidden);
+            iconOpen.classList.toggle('hidden', isHidden);
+            iconClose.classList.toggle('hidden', !isHidden);
+        });
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+            });
+        });
+
+        // =====================================================================
+        // IRC CLIENT LAUNCHER - every "Chat Now" / "here" / "Open IRC Client" button ends up here
+        // =====================================================================
+        const $ = id => document.getElementById(id);
+        const SITE = window.SITE || {};
+        const KIWI_URL = 'kiwi/';                 // the real Kiwi IRC client, built into this site (see README)
+        const STATE_KEY = 'hybrid-kiwi-state';    // must match startupOptions.state_key in kiwiirc/static/config.json
+        const CHANNELS = Object.assign({ general: '#global', feedback: '#global', contact: '#global' }, SITE.channels || {});
+        const TEXTS = {
+            general:  { kicker: 'Web IRC Client',     title: 'Welcome!',        sub: 'Pick a nickname and jump into the conversation.' },
+            feedback: { kicker: 'Community Feedback', title: 'Share your ideas', sub: 'Join the channel and tell us what to build next.' },
+            contact:  { kicker: 'Direct Support',     title: 'Talk to the team', sub: 'Join the channel and reach the admins directly.' },
+        };
+        let context = 'general';
+
+        // <login-logic>
+        // Turns the Welcome card into the login Kiwi needs. Real name = "<nick> <site link>".
+        function buildLogin(f) {
+            const nick = String(f.nick || '').trim();
+            const ident = f.hasIdent ? String(f.ident || '').trim() : '';
+            const pw = f.hasPw ? String(f.pw || '') : '';
+            if (!/^[A-Za-z_\[\]\\`^{|}][A-Za-z0-9_\-\[\]\\`^{|}]{0,29}$/.test(nick)) return { error: 'Please enter a valid nickname (letters, digits, _ - [ ] ).' };
+            if (ident && !/^[A-Za-z0-9_\-.~]{1,20}$/.test(ident)) return { error: 'Ident can only use letters, digits and _ - . ~' };
+            if (f.hasPw && !pw) return { error: 'Please enter your password.' };
+            const chans = String(f.chans || '').split(/[\s,]+/).filter(Boolean).map(c => (/^[#&]/.test(c) ? c : '#' + c));
+            if (!chans.length) chans.push(f.defaultChannel || '#global');
+            return { login: { nick: nick, ident: ident, password: pw, channels: chans.join(','), realname: nick + ' ' + f.link } };
+        }
+        // </login-logic>
+
+        // <love-theme>
+        // Juggu, Antonio, Starboy and Stargirl (any capitals; nickname or ident) start in the "Love by Antonio" theme.
+        // Only a starting default: once the person picks a theme themselves in Settings, that choice is respected.
+        const LOVE_NAMES = ['juggu', 'antonio', 'starboy', 'stargirl'];
+        const LOVE_THEME = 'Love by Antonio';
+        function kiwiUrlFor(base, nick, ident, storedState) {
+            const isLove = [nick, ident].some(n => LOVE_NAMES.indexOf(String(n || '').trim().toLowerCase()) > -1);
+            let chosen = false;
+            try { const o = JSON.parse(storedState || 'null'); chosen = !!(o && o.user_settings && o.user_settings.theme); } catch (e) { /* ignore */ }
+            return (isLove && !chosen) ? base + '?theme=' + encodeURIComponent(LOVE_THEME) : base;
+        }
+        // </love-theme>
+
+        function siteLink() { return String(SITE.link || window.location.origin).trim().replace(/\/+$/, ''); }
+        function showErr(m) { const e = $('irc-err'); e.textContent = m; e.classList.remove('hidden'); }
+
+        function openIrcModal(ctx) {
+            context = TEXTS[ctx] ? ctx : 'general';
+            const t = TEXTS[context];
+            $('modal-kicker').textContent = t.kicker;
+            $('modal-title').textContent = t.title;
+            $('modal-sub').textContent = t.sub;
+            $('irc-chans').value = CHANNELS[context] || '#global';
+            $('irc-err').classList.add('hidden');
+            $('irc-modal').classList.remove('hidden');
+            $('irc-modal').classList.add('flex');
+            setTimeout(() => $('irc-nick').focus(), 80);
+        }
+        function closeIrcModal() {
+            $('irc-modal').classList.add('hidden');
+            $('irc-modal').classList.remove('flex');
+        }
+
+        function startChat(e) {
+            if (e) e.preventDefault();
+            const r = buildLogin({
+                nick: $('irc-nick').value, hasIdent: $('irc-hasid').checked, ident: $('irc-ident').value,
+                hasPw: $('irc-haspw').checked, pw: $('irc-pw').value, chans: $('irc-chans').value,
+                defaultChannel: CHANNELS[context], link: siteLink(),
+            });
+            if (r.error) { showErr(r.error); return; }
+            $('irc-err').classList.add('hidden');
+            const l = r.login;
+
+            try { localStorage.setItem('ic_login', JSON.stringify({ nick: l.nick, ident: l.ident })); } catch (x) { /* ignore */ }
+            // forget networks Kiwi saved last time so the new nick / ident / password win (keeps its settings such as theme)
+            try {
+                const raw = localStorage.getItem(STATE_KEY);
+                if (raw) { const o = JSON.parse(raw); delete o.networks; localStorage.setItem(STATE_KEY, JSON.stringify(o)); }
+            } catch (x) { try { localStorage.removeItem(STATE_KEY); } catch (y) { /* ignore */ } }
+            // hand the login to Kiwi (read and deleted by kiwi/static/plugins/hybrid-login.js)
+            try { sessionStorage.setItem('hybrid_login', JSON.stringify(l)); }
+            catch (x) { showErr('Your browser blocked sessionStorage, so the login cannot be passed to the client.'); return; }
+
+            let stored = null;
+            try { stored = localStorage.getItem(STATE_KEY); } catch (x) { /* ignore */ }
+            window.location.href = kiwiUrlFor(KIWI_URL, l.nick, l.ident, stored);   // the client opens as its own page of this site
+        }
+
+        $('irc-form').addEventListener('submit', startChat);
+        $('irc-haspw').addEventListener('change', e => { $('irc-pw').classList.toggle('hidden', !e.target.checked); if (e.target.checked) $('irc-pw').focus(); });
+        $('irc-hasid').addEventListener('change', e => { $('irc-ident').classList.toggle('hidden', !e.target.checked); if (e.target.checked) $('irc-ident').focus(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('irc-modal').classList.contains('hidden')) closeIrcModal(); });
+        $('irc-modal').addEventListener('click', e => { if (e.target === $('irc-modal')) closeIrcModal(); });
+
+        // remember the last nickname / ident on this device
+        try {
+            const sv = JSON.parse(localStorage.getItem('ic_login') || 'null');
+            if (sv) {
+                $('irc-nick').value = sv.nick || '';
+                if (sv.ident) { $('irc-hasid').checked = true; $('irc-ident').value = sv.ident; $('irc-ident').classList.remove('hidden'); }
+            }
+        } catch (x) { /* ignore */ }
+    </script>
+</body>
+</html>
